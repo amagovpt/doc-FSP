@@ -12,7 +12,7 @@ Este repositório contêm a documentação técnica relativamente ao Serviço Fa
 Este repositório encontra-se em atualização.
 
 ## Estrutura da documentação
-
+* Na pasta **guidelines** disponibiliza-se um documento que elenca as guidelines de integração necessárias para certificação da aplicação.
 * [Manual de integração (download pdf)](https://amagovpt.github.io/doc-FSP/AMA&#32;-&#32;FSP&#32;Documento&#32;de&#32;integração.pdf)
 
 
