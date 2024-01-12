@@ -5,7 +5,7 @@
     "version": "v1"
   },
   "paths": {
-    "/api/Cipher": {
+    "/Cipher": {
       "get": {
         "tags": [
           "Cipher"
@@ -44,7 +44,80 @@
         }
       }
     },
-    "/api/Invoice": {
+    "/Invoice": {
+      "post": {
+        "tags": [
+          "Invoice"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Invoice"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoicePendingResentDTOPageResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Invoice/resend": {
       "post": {
         "tags": [
           "Invoice"
@@ -90,7 +163,52 @@
         }
       }
     },
-    "/api/Seller": {
+    "/Invoice/list": {
+      "get": {
+        "tags": [
+          "Invoice"
+        ],
+        "parameters": [
+          {
+            "name": "InvoiceState",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "EmissionDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Seller": {
       "delete": {
         "tags": [
           "Seller"
@@ -156,7 +274,89 @@
         }
       }
     },
-    "/api/Token": {
+    "/Sw/auth": {
+      "post": {
+        "tags": [
+          "Sw"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessTokenDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Sw/seller": {
+      "post": {
+        "tags": [
+          "Sw"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwSellerRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwSellerRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwSellerRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwSellerRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessTokenDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessageDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Token": {
       "put": {
         "tags": [
           "Token"
@@ -254,14 +454,14 @@
         },
         "additionalProperties": false
       },
+      "InvoicePendingResentDTOPageResult": {
+        "type": "object",
+        "additionalProperties": false
+      },
       "InvoiceRequest": {
         "type": "object",
         "properties": {
           "localId": {
-            "type": "string",
-            "nullable": true
-          },
-          "sellerId": {
             "type": "string",
             "nullable": true
           },
@@ -280,6 +480,15 @@
           "invoice": {
             "type": "string",
             "nullable": true
+          },
+          "emissionDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "collaboratorId": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -288,6 +497,28 @@
         "type": "object",
         "properties": {
           "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SwSellerRequest": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "enterpriseNipc": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientName": {
             "type": "string",
             "nullable": true
           },
